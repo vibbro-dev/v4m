@@ -1,0 +1,6 @@
+.qmake.stash
+Makefile
+*.o
+*.moc
+moc_*.*
+v4m

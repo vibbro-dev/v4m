@@ -1,5 +1,5 @@
 TEMPLATE = app
-TARGET = player
+TARGET = v4m
 
 QT += network \
       xml \
@@ -12,13 +12,15 @@ HEADERS = \
     playercontrols.h \
     playlistmodel.h \
     videowidget.h \
-    histogramwidget.h
+    histogramwidget.h \
+    double_player.h
 SOURCES = main.cpp \
     player.cpp \
     playercontrols.cpp \
     playlistmodel.cpp \
     videowidget.cpp \
-    histogramwidget.cpp
+    histogramwidget.cpp \
+    double_player.cpp
 
-target.path = $$[QT_INSTALL_EXAMPLES]/multimediawidgets/player
+target.path = .
 INSTALLS += target

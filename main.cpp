@@ -48,7 +48,7 @@
 **
 ****************************************************************************/
 
-#include "player.h"
+#include "double_player.h"
 
 #include <QApplication>
 #include <QCommandLineParser>
@@ -59,8 +59,8 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    QCoreApplication::setApplicationName("Player Example");
-    QCoreApplication::setOrganizationName("QtProject");
+    QCoreApplication::setApplicationName("v4m");
+    QCoreApplication::setOrganizationName("Vibbro");
     QCoreApplication::setApplicationVersion(QT_VERSION_STR);
     QCommandLineParser parser;
     QCommandLineOption customAudioRoleOption("custom-audio-role",
@@ -73,18 +73,32 @@ int main(int argc, char *argv[])
     parser.addPositionalArgument("url", "The URL(s) to open.");
     parser.process(app);
 
-    Player player;
+    DoublePlayer dp;
 
+/*
     if (parser.isSet(customAudioRoleOption))
-        player.setCustomAudioRole(parser.value(customAudioRoleOption));
+    {
+        player1.setCustomAudioRole(parser.value(customAudioRoleOption));
+        player2.setCustomAudioRole(parser.value(customAudioRoleOption));
+    }
+*/
 
-    if (!parser.positionalArguments().isEmpty() && player.isPlayerAvailable()) {
-        QList<QUrl> urls;
-        for (auto &a: parser.positionalArguments())
-            urls.append(QUrl::fromUserInput(a, QDir::currentPath(), QUrl::AssumeLocalFile));
-        player.addToPlaylist(urls);
+    if (!parser.positionalArguments().isEmpty())
+    {
+        if (dp.player(0).isPlayerAvailable()) {
+          QList<QUrl> urls;
+          for (auto &a: parser.positionalArguments())
+              urls.append(QUrl::fromUserInput(a, QDir::currentPath(), QUrl::AssumeLocalFile));
+          dp.player(0).addToPlaylist(urls);
+        }
+        if (dp.player(1).isPlayerAvailable()) {
+          QList<QUrl> urls;
+          for (auto &a: parser.positionalArguments())
+              urls.append(QUrl::fromUserInput(a, QDir::currentPath(), QUrl::AssumeLocalFile));
+          dp.player(1).addToPlaylist(urls);
+        }
     }
 
-    player.show();
+    dp.show();
     return app.exec();
 }
