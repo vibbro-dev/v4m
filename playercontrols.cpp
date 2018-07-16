@@ -103,6 +103,7 @@ PlayerControls::PlayerControls(QWidget *parent)
     connect(m_rateBox, QOverload<int>::of(&QComboBox::activated), this, &PlayerControls::updateRate);
 #endif
 
+    QGridLayout *two_tiers = new QGridLayout;
     QBoxLayout *layout = new QHBoxLayout;
     layout->setMargin(0);
     layout->addWidget(m_stopButton);
@@ -110,12 +111,12 @@ PlayerControls::PlayerControls(QWidget *parent)
     layout->addWidget(m_playButton);
     layout->addWidget(m_nextButton);
     layout->addWidget(m_muteButton);
-    layout->addWidget(m_volumeSlider);
-    layout->addStretch(50);
 #if 0
     layout->addWidget(m_rateBox);
 #endif
-    setLayout(layout);
+    two_tiers->addLayout(layout, 1, 5);
+    two_tiers->addWidget(m_volumeSlider, 2, 5);
+    setLayout(two_tiers);
 }
 
 QMediaPlayer::State PlayerControls::state() const
