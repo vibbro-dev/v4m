@@ -135,14 +135,18 @@ Player::Player(QWidget *parent)
     connect(controls, &PlayerControls::previous, this, &Player::previousClicked);
     connect(controls, &PlayerControls::changeVolume, m_player, &QMediaPlayer::setVolume);
     connect(controls, &PlayerControls::changeMuting, m_player, &QMediaPlayer::setMuted);
+#if 0
     connect(controls, &PlayerControls::changeRate, m_player, &QMediaPlayer::setPlaybackRate);
+#endif
 
     connect(m_player, &QMediaPlayer::stateChanged, controls, &PlayerControls::setState);
     connect(m_player, &QMediaPlayer::volumeChanged, controls, &PlayerControls::setVolume);
     connect(m_player, &QMediaPlayer::mutedChanged, controls, &PlayerControls::setMuted);
 
+#if 0
     m_fullScreenButton = new QPushButton(tr("FullScreen"), this);
     m_fullScreenButton->setCheckable(true);
+#endif
 
 #if 0
     m_colorButton = new QPushButton(tr("Color Options..."), this);
@@ -159,8 +163,8 @@ Player::Player(QWidget *parent)
     controlLayout->addStretch(1);
     controlLayout->addWidget(controls);
     controlLayout->addStretch(1);
-    controlLayout->addWidget(m_fullScreenButton);
 #if 0
+    controlLayout->addWidget(m_fullScreenButton);
     controlLayout->addWidget(m_colorButton);
 #endif
 
@@ -194,8 +198,8 @@ Player::Player(QWidget *parent)
         openButton->setEnabled(false);
 #if 0
         m_colorButton->setEnabled(false);
-#endif
         m_fullScreenButton->setEnabled(false);
+#endif
     }
 
     metaDataChanged();

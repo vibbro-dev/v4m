@@ -91,13 +91,17 @@ PlayerControls::PlayerControls(QWidget *parent)
 
     connect(m_volumeSlider, &QSlider::valueChanged, this, &PlayerControls::onVolumeSliderValueChanged);
 
+#if 0
     m_rateBox = new QComboBox(this);
     m_rateBox->addItem("0.5x", QVariant(0.5));
     m_rateBox->addItem("1.0x", QVariant(1.0));
     m_rateBox->addItem("2.0x", QVariant(2.0));
     m_rateBox->setCurrentIndex(1);
+#endif
 
+#if 0
     connect(m_rateBox, QOverload<int>::of(&QComboBox::activated), this, &PlayerControls::updateRate);
+#endif
 
     QBoxLayout *layout = new QHBoxLayout;
     layout->setMargin(0);
@@ -107,7 +111,10 @@ PlayerControls::PlayerControls(QWidget *parent)
     layout->addWidget(m_nextButton);
     layout->addWidget(m_muteButton);
     layout->addWidget(m_volumeSlider);
+    layout->addStretch(50);
+#if 0
     layout->addWidget(m_rateBox);
+#endif
     setLayout(layout);
 }
 
@@ -190,11 +197,14 @@ void PlayerControls::muteClicked()
     emit changeMuting(!m_playerMuted);
 }
 
+#if 0
 qreal PlayerControls::playbackRate() const
 {
     return m_rateBox->itemData(m_rateBox->currentIndex()).toDouble();
 }
+#endif
 
+#if 0
 void PlayerControls::setPlaybackRate(float rate)
 {
     for (int i = 0; i < m_rateBox->count(); ++i) {
@@ -207,11 +217,14 @@ void PlayerControls::setPlaybackRate(float rate)
     m_rateBox->addItem(QString("%1x").arg(rate), QVariant(rate));
     m_rateBox->setCurrentIndex(m_rateBox->count() - 1);
 }
+#endif
 
+#if 0
 void PlayerControls::updateRate()
 {
     emit changeRate(playbackRate());
 }
+#endif
 
 void PlayerControls::onVolumeSliderValueChanged()
 {

@@ -117,10 +117,8 @@ private:
     QLabel *m_coverLabel = nullptr;
     QSlider *m_slider = nullptr;
     QLabel *m_labelDuration = nullptr;
-    QPushButton *m_fullScreenButton = nullptr;
 #if 0
-    QPushButton *m_colorButton = nullptr;
-    QDialog *m_colorDialog = nullptr;
+    QPushButton *m_fullScreenButton = nullptr;
 #endif
     QLabel *m_statusLabel = nullptr;
     QStatusBar *m_statusBar = nullptr;
