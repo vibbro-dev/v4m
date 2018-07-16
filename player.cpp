@@ -231,6 +231,7 @@ void Player::open()
         fileDialog.setMimeTypeFilters(supportedMimeTypes);
     }
     fileDialog.setDirectory(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).value(0, QDir::homePath()));
+    qInfo() << "Music Directory: " << QStandardPaths::displayName(QStandardPaths::MusicLocation);
     if (fileDialog.exec() == QDialog::Accepted)
         addToPlaylist(fileDialog.selectedUrls());
 }
