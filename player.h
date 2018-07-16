@@ -123,11 +123,13 @@ private:
     QLabel *m_statusLabel = nullptr;
     QStatusBar *m_statusBar = nullptr;
 
+#if 0
     QLabel *m_labelHistogram = nullptr;
     HistogramWidget *m_videoHistogram = nullptr;
     HistogramWidget *m_audioHistogram = nullptr;
     QVideoProbe *m_videoProbe = nullptr;
     QAudioProbe *m_audioProbe = nullptr;
+#endif
 
     PlaylistModel *m_playlistModel = nullptr;
     QAbstractItemView *m_playlistView = nullptr;

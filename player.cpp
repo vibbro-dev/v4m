@@ -102,6 +102,7 @@ Player::Player(QWidget *parent)
     m_labelDuration = new QLabel(this);
     connect(m_slider, &QSlider::sliderMoved, this, &Player::seek);
 
+#if 0
     m_labelHistogram = new QLabel(this);
     m_labelHistogram->setText("Histogram:");
     m_videoHistogram = new HistogramWidget(this);
@@ -110,7 +111,9 @@ Player::Player(QWidget *parent)
     histogramLayout->addWidget(m_labelHistogram);
     histogramLayout->addWidget(m_videoHistogram, 1);
     histogramLayout->addWidget(m_audioHistogram, 2);
+#endif
 
+#if 0
     m_videoProbe = new QVideoProbe(this);
     connect(m_videoProbe, &QVideoProbe::videoFrameProbed, m_videoHistogram, &HistogramWidget::processFrame);
     m_videoProbe->setSource(m_player);
@@ -118,6 +121,7 @@ Player::Player(QWidget *parent)
     m_audioProbe = new QAudioProbe(this);
     connect(m_audioProbe, &QAudioProbe::audioBufferProbed, m_audioHistogram, &HistogramWidget::processBuffer);
     m_audioProbe->setSource(m_player);
+#endif
 
     QPushButton *openButton = new QPushButton(tr("Open"), this);
 
@@ -175,7 +179,9 @@ Player::Player(QWidget *parent)
     hLayout->addWidget(m_labelDuration);
     layout->addLayout(hLayout);
     layout->addLayout(controlLayout);
+#if 0
     layout->addLayout(histogramLayout);
+#endif
 #if defined(Q_OS_QNX)
     // On QNX, the main window doesn't have a title bar (or any other decorations).
     // Create a status bar for the status information instead.
@@ -421,6 +427,8 @@ void Player::updateDurationInfo(qint64 currentInfo)
 
 void Player::clearHistogram()
 {
+#if 0
     QMetaObject::invokeMethod(m_videoHistogram, "processFrame", Qt::QueuedConnection, Q_ARG(QVideoFrame, QVideoFrame()));
     QMetaObject::invokeMethod(m_audioHistogram, "processBuffer", Qt::QueuedConnection, Q_ARG(QAudioBuffer, QAudioBuffer()));
+#endif
 }
