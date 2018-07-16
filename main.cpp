@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
     parser.addPositionalArgument("url", "The URL(s) to open.");
     parser.process(app);
 
-    Player player1;
+    Player player;
 
     if (parser.isSet(customAudioRoleOption))
         player.setCustomAudioRole(parser.value(customAudioRoleOption));
