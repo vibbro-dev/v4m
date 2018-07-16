@@ -102,11 +102,8 @@ private slots:
     void statusChanged(QMediaPlayer::MediaStatus status);
     void stateChanged(QMediaPlayer::State state);
     void bufferingProgress(int progress);
-    void videoAvailableChanged(bool available);
 
     void displayErrorMessage();
-
-    void showColorDialog();
 
 private:
     void clearHistogram();
@@ -117,13 +114,14 @@ private:
 
     QMediaPlayer *m_player = nullptr;
     QMediaPlaylist *m_playlist = nullptr;
-    QVideoWidget *m_videoWidget = nullptr;
     QLabel *m_coverLabel = nullptr;
     QSlider *m_slider = nullptr;
     QLabel *m_labelDuration = nullptr;
     QPushButton *m_fullScreenButton = nullptr;
+#if 0
     QPushButton *m_colorButton = nullptr;
     QDialog *m_colorDialog = nullptr;
+#endif
     QLabel *m_statusLabel = nullptr;
     QStatusBar *m_statusBar = nullptr;
 
