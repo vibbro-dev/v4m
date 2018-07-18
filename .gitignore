@@ -4,3 +4,4 @@ Makefile
 *.moc
 moc_*.*
 v4m
+/doc/Vibbro
