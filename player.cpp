@@ -74,6 +74,8 @@ Player::Player(QWidget *parent)
     // owned by PlaylistModel
     m_playlist = new QMediaPlaylist();
     m_player->setPlaylist(m_playlist);
+    m_player->setVolume(40);
+    m_player->play();
 //! [create-objs]
 
     connect(m_player, &QMediaPlayer::durationChanged, this, &Player::durationChanged);
@@ -225,14 +227,9 @@ void Player::open()
     QFileDialog fileDialog(this);
     fileDialog.setAcceptMode(QFileDialog::AcceptOpen);
     fileDialog.setWindowTitle(tr("Open Files"));
-    QStringList supportedMimeTypes = m_player->supportedMimeTypes();
-    if (!supportedMimeTypes.isEmpty()) {
-        supportedMimeTypes.append("audio/x-m3u"); // MP3 playlists
-        fileDialog.setMimeTypeFilters(supportedMimeTypes);
-    }
-    fileDialog.setDirectory(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).value(0, QDir::homePath()));
-    qInfo() << "Music Directory: " << QStandardPaths::displayName(QStandardPaths::MusicLocation);
-    qInfo() << "Music files found: " << QStandardPaths::locateAll(QStandardPaths::MusicLocation, "*.mp3");
+    fileDialog.setDirectory(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).value(0, "*.m3u"));
+    fileDialog.setNameFilter(tr("Music files (*.mp3 *.ogg *.flac)"));
+    
     if (fileDialog.exec() == QDialog::Accepted)
         addToPlaylist(fileDialog.selectedUrls());
 }
