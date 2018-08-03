@@ -1,5 +1,5 @@
 TEMPLATE = app
-TARGET = file_locator
+TARGET = music_locator
 
 QT += core
 
