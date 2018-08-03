@@ -1,0 +1,4 @@
+music_locator
+Makefile
+*.o
+.qmake.stash
