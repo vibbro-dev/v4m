@@ -5,11 +5,15 @@
 ** This small app is just to test the file location capabilities within Qt
 ** The target is to be able to locate all music files within a given device
 **
+** LICENSE: GNU GPL 3.0
+**
 ****************************************************************************/
 
 #include <QDebug>
 #include <QStandardPaths>
 #include <QDir>
+
+#include "music_discovery.h"
 
 int
 main(int /* not used */, char */* not used either */[])
@@ -24,19 +28,9 @@ main(int /* not used */, char */* not used either */[])
 
     // switch to QDir and do it the hard way
     qInfo() << "\nUsing QDir class capabilities...";
-    QString musicFullPath = QDir::homePath() + "/" + QStandardPaths::displayName(QStandardPaths::MusicLocation);
-    qInfo() << "\tMusic full path is (string): " << musicFullPath;
-    QDir music(musicFullPath);
+    
+    QStringList music_files = musicDiscovery();
 
-    if (!music.exists())
-      qFatal("\tCannot find the %s directory", qPrintable(musicFullPath));
-    else
-      qInfo() << "\tThe path" << musicFullPath << "exists";
-
-    QStringList music_file_filters;
-    music_file_filters << "*.mp3"<< "*.ogg" << "*.flac" << "*.aac" << "*.ac3" << "*.aiff" << "*.aif" << "*.m4a" << "*.wav" << "*.wma" << "*.ogv";
-    music.setNameFilters(music_file_filters);
-    QStringList music_files = music.entryList();
     qInfo() << "\tFiles found:";
     for (const auto s : music_files)
       qInfo() << "\t\t" << s;
