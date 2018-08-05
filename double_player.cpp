@@ -1,3 +1,13 @@
+/****************************************************************************
+**
+** Copyright (C) 2018 Vibbro Snc.
+**
+** This small app is just to test the file location capabilities within Qt
+** The target is to be able to locate all music files within a given device
+**
+** LICENSE: GNU GPL 3.0
+**
+****************************************************************************/
 
 #include "double_player.h"
 

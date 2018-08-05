@@ -51,6 +51,8 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include "music_discovery.h"
+
 #include <QWidget>
 #include <QMediaPlayer>
 #include <QMediaPlaylist>
@@ -89,6 +91,7 @@ signals:
 
 private slots:
     void open();
+    void reload();
     void durationChanged(qint64 duration);
     void positionChanged(qint64 progress);
     void metaDataChanged();
@@ -117,22 +120,12 @@ private:
     QLabel *m_coverLabel = nullptr;
     QSlider *m_slider = nullptr;
     QLabel *m_labelDuration = nullptr;
-#if 0
-    QPushButton *m_fullScreenButton = nullptr;
-#endif
     QLabel *m_statusLabel = nullptr;
     QStatusBar *m_statusBar = nullptr;
 
-#if 0
-    QLabel *m_labelHistogram = nullptr;
-    HistogramWidget *m_videoHistogram = nullptr;
-    HistogramWidget *m_audioHistogram = nullptr;
-    QVideoProbe *m_videoProbe = nullptr;
-    QAudioProbe *m_audioProbe = nullptr;
-#endif
-
     PlaylistModel *m_playlistModel = nullptr;
     QAbstractItemView *m_playlistView = nullptr;
+    MusicDiscovery m_musicDiscovery;
     QString m_trackInfo;
     QString m_statusInfo;
     qint64 m_duration;

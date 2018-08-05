@@ -207,6 +207,10 @@ Player::Player(QWidget *parent)
         m_fullScreenButton->setEnabled(false);
 #endif
     }
+    //
+    // read the playlist
+    //
+    reload();
 
     metaDataChanged();
 }
@@ -220,6 +224,16 @@ bool Player::isPlayerAvailable() const
     return m_player->isAvailable();
 }
 
+void Player::reload()
+{
+   m_musicDiscovery.reload();
+   m_playlistModel->clear();
+   addToPlaylist(m_musicDiscovery.localMusicUrls());
+}
+
+//
+// this is about to go...
+//
 void Player::open()
 {
     QFileDialog fileDialog(this);
