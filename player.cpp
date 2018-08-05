@@ -68,9 +68,6 @@ Player::Player(QWidget *parent)
 //! [create-objs]
     m_player = new QMediaPlayer(this);
     m_player->setAudioRole(QAudio::MusicRole);
-    qInfo() << "Supported audio roles:";
-    for (QAudio::Role role : m_player->supportedAudioRoles())
-        qInfo() << "    " << role;
     // owned by PlaylistModel
     m_playlist = new QMediaPlaylist();
     m_player->setPlaylist(m_playlist);
@@ -189,8 +186,6 @@ void Player::open()
         fileDialog.setMimeTypeFilters(supportedMimeTypes);
     }
     fileDialog.setDirectory(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).value(0, QDir::homePath()));
-    qInfo() << "Music Directory: " << QStandardPaths::displayName(QStandardPaths::MusicLocation);
-    qInfo() << "Music files found: " << QStandardPaths::locateAll(QStandardPaths::MusicLocation, "*.mp3");
     if (fileDialog.exec() == QDialog::Accepted)
         addToPlaylist(fileDialog.selectedUrls());
 }
