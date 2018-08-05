@@ -102,30 +102,9 @@ Player::Player(QWidget *parent)
     m_labelDuration = new QLabel(this);
     connect(m_slider, &QSlider::sliderMoved, this, &Player::seek);
 
-#if 0
-    m_labelHistogram = new QLabel(this);
-    m_labelHistogram->setText("Histogram:");
-    m_videoHistogram = new HistogramWidget(this);
-    m_audioHistogram = new HistogramWidget(this);
-    QHBoxLayout *histogramLayout = new QHBoxLayout;
-    histogramLayout->addWidget(m_labelHistogram);
-    histogramLayout->addWidget(m_videoHistogram, 1);
-    histogramLayout->addWidget(m_audioHistogram, 2);
-#endif
+    QPushButton *reloadButton = new QPushButton(tr("Reload"), this);
 
-#if 0
-    m_videoProbe = new QVideoProbe(this);
-    connect(m_videoProbe, &QVideoProbe::videoFrameProbed, m_videoHistogram, &HistogramWidget::processFrame);
-    m_videoProbe->setSource(m_player);
-
-    m_audioProbe = new QAudioProbe(this);
-    connect(m_audioProbe, &QAudioProbe::audioBufferProbed, m_audioHistogram, &HistogramWidget::processBuffer);
-    m_audioProbe->setSource(m_player);
-#endif
-
-    QPushButton *openButton = new QPushButton(tr("Open"), this);
-
-    connect(openButton, &QPushButton::clicked, this, &Player::open);
+    connect(reloadButton, &QPushButton::clicked, this, &Player::reload);
 
     PlayerControls *controls = new PlayerControls(this);
     controls->setState(m_player->state());
@@ -139,38 +118,20 @@ Player::Player(QWidget *parent)
     connect(controls, &PlayerControls::previous, this, &Player::previousClicked);
     connect(controls, &PlayerControls::changeVolume, m_player, &QMediaPlayer::setVolume);
     connect(controls, &PlayerControls::changeMuting, m_player, &QMediaPlayer::setMuted);
-#if 0
-    connect(controls, &PlayerControls::changeRate, m_player, &QMediaPlayer::setPlaybackRate);
-#endif
 
     connect(m_player, &QMediaPlayer::stateChanged, controls, &PlayerControls::setState);
     connect(m_player, &QMediaPlayer::volumeChanged, controls, &PlayerControls::setVolume);
     connect(m_player, &QMediaPlayer::mutedChanged, controls, &PlayerControls::setMuted);
-
-#if 0
-    m_fullScreenButton = new QPushButton(tr("FullScreen"), this);
-    m_fullScreenButton->setCheckable(true);
-#endif
-
-#if 0
-    m_colorButton = new QPushButton(tr("Color Options..."), this);
-    m_colorButton->setEnabled(false);
-    connect(m_colorButton, &QPushButton::clicked, this, &Player::showColorDialog);
-#endif
 
     QBoxLayout *displayLayout = new QHBoxLayout;
     displayLayout->addWidget(m_playlistView);
 
     QBoxLayout *controlLayout = new QHBoxLayout;
     controlLayout->setMargin(0);
-    controlLayout->addWidget(openButton);
+    controlLayout->addWidget(reloadButton);
     controlLayout->addStretch(1);
     controlLayout->addWidget(controls);
     controlLayout->addStretch(1);
-#if 0
-    controlLayout->addWidget(m_fullScreenButton);
-    controlLayout->addWidget(m_colorButton);
-#endif
 
     QBoxLayout *layout = new QVBoxLayout;
     layout->addLayout(displayLayout);
@@ -179,18 +140,6 @@ Player::Player(QWidget *parent)
     hLayout->addWidget(m_labelDuration);
     layout->addLayout(hLayout);
     layout->addLayout(controlLayout);
-#if 0
-    layout->addLayout(histogramLayout);
-#endif
-#if defined(Q_OS_QNX)
-    // On QNX, the main window doesn't have a title bar (or any other decorations).
-    // Create a status bar for the status information instead.
-    m_statusLabel = new QLabel;
-    m_statusBar = new QStatusBar;
-    m_statusBar->addPermanentWidget(m_statusLabel);
-    m_statusBar->setSizeGripEnabled(false); // Without mouse grabbing, it doesn't work very well.
-    layout->addWidget(m_statusBar);
-#endif
 
     setLayout(layout);
 
@@ -201,18 +150,12 @@ Player::Player(QWidget *parent)
 
         controls->setEnabled(false);
         m_playlistView->setEnabled(false);
-        openButton->setEnabled(false);
-#if 0
-        m_colorButton->setEnabled(false);
-        m_fullScreenButton->setEnabled(false);
-#endif
+        reloadButton->setEnabled(false);
     }
     //
     // read the playlist
     //
     reload();
-
-    metaDataChanged();
 }
 
 Player::~Player()
@@ -226,9 +169,10 @@ bool Player::isPlayerAvailable() const
 
 void Player::reload()
 {
-   m_musicDiscovery.reload();
-   m_playlistModel->clear();
-   addToPlaylist(m_musicDiscovery.localMusicUrls());
+    m_musicDiscovery.reload();
+    m_playlistModel->clear();
+    addToPlaylist(m_musicDiscovery.localMusicUrls());
+    metaDataChanged();
 }
 
 //

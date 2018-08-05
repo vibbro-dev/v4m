@@ -13,6 +13,6 @@
 
 #include <QStringList>
 
-QStringList musicLocationPath();
+const QStringList &musicLocationPath();
 
 #endif /* !defined(_V4M_V4M_MUSIC_PATH_H_) */

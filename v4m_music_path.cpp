@@ -14,7 +14,7 @@
 
 #if !defined(Q_OS_LINUX)
 
-QStringList musicLocationPath()
+const QStringList &musicLocationPath()
 {
    return QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
 }
@@ -25,12 +25,11 @@ QStringList musicLocationPath()
 
 #include <QTranslator>
 
-QStringList musicLocationPath()
+const QStringList &musicLocationPath()
 {
   static QStringList result;
-  QString r(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).value(0) + QLatin1String("/") + QObject::tr("Music"));
 
-  result << r;
+  result << (QStandardPaths::standardLocations(QStandardPaths::MusicLocation).value(0) + QLatin1String("/") + QObject::tr("Music"));
 
   return result;
 }

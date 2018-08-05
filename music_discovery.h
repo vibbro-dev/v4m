@@ -23,15 +23,15 @@ class MusicDiscovery
 {
 public:
     explicit MusicDiscovery(const QDir &root = QDir::homePath(), const QStringList &standard_locations = musicLocationPath());
-    const QStringList musicFilePaths()          { return m_music_file_paths; }
+    const QStringList musicFilePaths()          { return m_musicFilePaths; }
     const QList<QUrl> localMusicUrls();
     void reload();
 
 private:
 
-    const QDir &m_root_dir;
-    const QStringList &m_standard_music_locations;
-    QStringList m_music_file_paths;
+    const QDir &m_rootDir;
+    const QStringList &m_standardMusicLocations;
+    QStringList m_musicFilePaths;
 };
 
 #endif /* !defined(_V4M_MUSIC_DISCOVERY_H_) */

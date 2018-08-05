@@ -1,5 +1,6 @@
 TEMPLATE = app
 TARGET = v4m
+CONFIG += debug
 
 QT += network \
       xml \

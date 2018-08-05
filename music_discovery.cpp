@@ -12,17 +12,20 @@
 
 #include "music_discovery.h"
 
-MusicDiscovery::MusicDiscovery(const QDir &r, const QStringList &sl) : m_root_dir(r), m_standard_music_locations(sl) {}
+MusicDiscovery::MusicDiscovery(const QDir &r, const QStringList &sl)
+        : m_rootDir(r), m_standardMusicLocations(sl)
+{
+}
 
 static void
-recursiveDiscovery(QDir &startDir, const QStringList &music_file_filters, QStringList &result)
+recursiveDiscovery(QDir &startDir, const QStringList &musicFileFilters, QStringList &result)
 {
    if (!startDir.exists())
       qWarning("\tCannot find the %s directory", qPrintable(startDir.path()));
    else
    {
        QStringList subdir_names = startDir.entryList(QDir::Dirs | QDir::NoDot | QDir::NoDotDot);
-       startDir.setNameFilters(music_file_filters);
+       startDir.setNameFilters(musicFileFilters);
        //
        // read the music files in the current directory first...
        //
@@ -35,7 +38,7 @@ recursiveDiscovery(QDir &startDir, const QStringList &music_file_filters, QStrin
        for (auto subdir_name : subdir_names)
        {
          QDir subdir(startDir.path() + QLatin1String("/") + subdir_name);
-         recursiveDiscovery(subdir, music_file_filters, result);
+         recursiveDiscovery(subdir, musicFileFilters, result);
        }
    }
 }
@@ -43,24 +46,25 @@ recursiveDiscovery(QDir &startDir, const QStringList &music_file_filters, QStrin
 void
 MusicDiscovery::reload()
 {
-    QStringList music_file_filters;
+    m_musicFilePaths.clear();
     //
     // FIXME: this is an ugly hack: file formats should not be hard-wired in the code
     //
-    music_file_filters << "*.mp3"<< "*.ogg" << "*.flac" << "*.aac" << "*.ac3" << "*.aiff" << "*.aif" << "*.m4a" << "*.wav" << "*.wma";
+    QStringList musicFileFilters;
+    musicFileFilters << "*.mp3"<< "*.ogg" << "*.flac" << "*.aac" << "*.ac3" << "*.aiff" << "*.aif" << "*.m4a" << "*.wav" << "*.wma";
 
-    for (auto music_location : m_standard_music_locations)
+    for (auto music_location : musicLocationPath())
     {
       QDir mpath(music_location);
 
       if (mpath.isRelative())
       {
-        QString musicFullPath = m_root_dir.path() + QLatin1String("/") + music_location;
+        QString musicFullPath = m_rootDir.path() + QLatin1String("/") + music_location;
 
         mpath.setPath(musicFullPath);
       }
 
-      recursiveDiscovery(mpath, music_file_filters, m_music_file_paths);
+      recursiveDiscovery(mpath, musicFileFilters, m_musicFilePaths);
     }
 }
 
