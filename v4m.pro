@@ -9,6 +9,7 @@ QT += network \
 
 HEADERS = \
     player.h \
+    frequency_player.h \
     playercontrols.h \
     playlistmodel.h \
     videowidget.h \
@@ -16,6 +17,7 @@ HEADERS = \
     double_player.h
 SOURCES = main.cpp \
     player.cpp \
+    frequency_player.cpp \
     playercontrols.cpp \
     playlistmodel.cpp \
     videowidget.cpp \
