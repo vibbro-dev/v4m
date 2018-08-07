@@ -31,7 +31,7 @@ signals:
     void fullScreenChanged(bool fullScreen);
 
 private:
-    Player *m_player[2] = { nullptr, nullptr };
+    Player *m_player[2] { nullptr, nullptr };
     QVBoxLayout layout;
 };
 
