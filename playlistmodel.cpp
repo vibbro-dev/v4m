@@ -73,6 +73,13 @@ int PlaylistModel::columnCount(const QModelIndex &parent) const
     return !parent.isValid() ? ColumnCount : 0;
 }
 
+void
+PlaylistModel::clear()
+{
+    if (m_playlist)
+        m_playlist->clear();
+}
+
 QModelIndex PlaylistModel::index(int row, int column, const QModelIndex &parent) const
 {
     return m_playlist && !parent.isValid()

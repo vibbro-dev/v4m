@@ -1,6 +1,16 @@
+/****************************************************************************
+**
+** Copyright (C) 2018 Vibbro Snc.
+**
+** This small app is just to test the file location capabilities within Qt
+** The target is to be able to locate all music files within a given device
+**
+** LICENSE: GNU GPL 3.0
+**
+****************************************************************************/
 
-#ifndef DOUBLE_PLAYER_H
-#define DOUBLE_PLAYER_H
+#ifndef _V4M_DOUBLE_PLAYER_H_
+#define _V4M_DOUBLE_PLAYER_H_
 
 #include <QGroupBox>
 #include <QVBoxLayout>
@@ -21,9 +31,9 @@ signals:
     void fullScreenChanged(bool fullScreen);
 
 private:
-    Player *m_player[2] = { nullptr, nullptr };
+    Player *m_player[2] { nullptr, nullptr };
     QVBoxLayout layout;
 };
 
-#endif // DOUBLE_PLAYER_H
+#endif // _V4M_DOUBLE_PLAYER_H_
 
