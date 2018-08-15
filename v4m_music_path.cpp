@@ -11,32 +11,20 @@
 #include "v4m_music_path.h"
 
 #include <QDebug>
-#include <QStandardPaths>
-
-#if !defined(Q_OS_LINUX)
-
-#   define _V4M_OS_MUSIC_PATHS_ (QStandardPaths::standardLocations(QStandardPaths::MusicLocation))
-
-#endif /* !defined(Q_OS_LINUX) */
-
-#if defined(Q_OS_LINUX)
-
-#include <QTranslator>
-
-#   define _V4M_OS_MUSIC_PATHS_ (QStandardPaths::standardLocations(QStandardPaths::MusicLocation).value(0) + QLatin1String("/") + QObject::tr("Music"))
-
-#endif /* defined(Q_OS_LINUX) */
+#include <QDir>
 
 const QStringList &musicLocationPath()
 {
    static QStringList result;
 
    result.clear();
-   result << _V4M_OS_MUSIC_PATHS_;
+   result << (QDir::currentPath() + QLatin1String("/music"));
 
+#if 0
    qInfo() << "*** standard music paths found:";
    for (auto path : result)
        qInfo() << "\t" << path;
+#endif
 
    return result;
 }

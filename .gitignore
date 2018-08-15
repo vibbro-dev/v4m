@@ -8,3 +8,4 @@ v4m
 *.pro.user*
 build-*
 core
+*.rcc

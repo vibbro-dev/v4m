@@ -28,5 +28,16 @@ SOURCES = main.cpp \
     music_discovery.cpp \
     v4m_music_path.cpp
 
+binary_resources.target = music.rcc
+binary_resources.depends = resources/music.qrc
+binary_resources.commands = rcc -binary $$binary_resources.depends  -o $$binary_resources.target
+
+resource_clean.commands = rm -f $$binary_resources.target
+clean.depends += resource_clean
+
+PRE_TARGETDEPS += $$binary_resources.target
+
+QMAKE_EXTRA_TARGETS += binary_resources resource_clean clean
+
 target.path = .
 INSTALLS += target

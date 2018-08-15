@@ -9,6 +9,8 @@
 ****************************************************************************/
 
 #include <QDebug>
+#include <QResource>
+#include <QDirIterator>
 
 #include "music_discovery.h"
 
@@ -17,54 +19,19 @@ MusicDiscovery::MusicDiscovery(const QDir &r, const QStringList &sl)
 {
 }
 
-static void
-recursiveDiscovery(QDir &startDir, const QStringList &musicFileFilters, QStringList &result)
-{
-   if (!startDir.exists())
-      qWarning("\tCannot find the %s directory", qPrintable(startDir.path()));
-   else
-   {
-       QStringList subdir_names = startDir.entryList(QDir::Dirs | QDir::NoDot | QDir::NoDotDot);
-       startDir.setNameFilters(musicFileFilters);
-       //
-       // read the music files in the current directory first...
-       //
-       for (auto music_file_name : startDir.entryList())
-         result += (startDir.path() + QLatin1String("/") + music_file_name);
-    
-       //
-       // and then recurse in the subdirectories
-       //
-       for (auto subdir_name : subdir_names)
-       {
-         QDir subdir(startDir.path() + QLatin1String("/") + subdir_name);
-         recursiveDiscovery(subdir, musicFileFilters, result);
-       }
-   }
-}
-
 void
 MusicDiscovery::reload()
 {
+    QResource::registerResource("./music.rcc");
+    QDirIterator it(":/music/", QDirIterator::Subdirectories);
+
     m_musicFilePaths.clear();
-    //
-    // FIXME: this is an ugly hack: file formats should not be hard-wired in the code
-    //
-    QStringList musicFileFilters;
-    musicFileFilters << "*.mp3"<< "*.ogg" << "*.flac" << "*.aac" << "*.ac3" << "*.aiff" << "*.aif" << "*.m4a" << "*.wav" << "*.wma";
-
-    for (auto music_location : musicLocationPath())
+    while (it.hasNext())
     {
-      QDir mpath(music_location);
+        QString next_work(it.next());
 
-      if (mpath.isRelative())
-      {
-        QString musicFullPath = m_rootDir.path() + QLatin1String("/") + music_location;
-
-        mpath.setPath(musicFullPath);
-      }
-
-      recursiveDiscovery(mpath, musicFileFilters, m_musicFilePaths);
+        qInfo() << next_work;
+        m_musicFilePaths << next_work;
     }
 }
 
@@ -74,7 +41,7 @@ MusicDiscovery::localMusicUrls()
   QList<QUrl> urls;
 
   for(auto path : musicFilePaths())
-    urls << QUrl("file:///" + path);
+    urls << path;
 
   return urls;
 }
