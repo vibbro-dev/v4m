@@ -9,3 +9,6 @@ v4m
 build-*
 core
 *.rcc
+*.wav
+*.sco
+*.mp3
