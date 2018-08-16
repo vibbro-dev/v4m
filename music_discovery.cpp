@@ -9,7 +9,6 @@
 ****************************************************************************/
 
 #include <QDebug>
-#include <QResource>
 #include <QDirIterator>
 
 #include "music_discovery.h"
@@ -22,7 +21,6 @@ MusicDiscovery::MusicDiscovery(const QDir &r, const QStringList &sl)
 void
 MusicDiscovery::reload()
 {
-    QResource::registerResource("./music.rcc");
     QDirIterator it(":/music/", QDirIterator::Subdirectories);
 
     m_musicFilePaths.clear();
@@ -30,7 +28,6 @@ MusicDiscovery::reload()
     {
         QString next_work(it.next());
 
-        qInfo() << next_work;
         m_musicFilePaths << next_work;
     }
 }
@@ -41,7 +38,11 @@ MusicDiscovery::localMusicUrls()
   QList<QUrl> urls;
 
   for(auto path : musicFilePaths())
-    urls << path;
+  {
+    // we need to remove the stupid ':' in front
+    QString url("qrc:///" + path.remove(0,2));
+    urls << url;
+  }
 
   return urls;
 }

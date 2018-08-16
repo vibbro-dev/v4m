@@ -54,10 +54,12 @@
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 #include <QDir>
+#include <QResource>
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+    QResource::registerResource("./music.rcc");
 
     QCoreApplication::setApplicationName("v4m");
     QCoreApplication::setOrganizationName("Vibbro");

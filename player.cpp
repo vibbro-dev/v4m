@@ -347,6 +347,7 @@ void Player::setTrackInfo(const QString &info)
 void Player::setStatusInfo(const QString &info)
 {
     m_statusInfo = info;
+    qDebug() << "Status info:" << m_statusInfo;
 
     if (m_statusBar) {
         m_statusBar->showMessage(m_trackInfo);
@@ -361,6 +362,7 @@ void Player::setStatusInfo(const QString &info)
 
 void Player::displayErrorMessage()
 {
+    qDebug() << "Player error:" << m_player->errorString() << "for" << m_player->media().canonicalUrl().toString();
     setStatusInfo(m_player->errorString());
 }
 
