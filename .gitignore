@@ -8,3 +8,6 @@ v4m
 *.pro.user*
 build-*
 core
+*.wav
+*.sco
+*.mp3
