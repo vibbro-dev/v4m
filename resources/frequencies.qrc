@@ -1,0 +1,7 @@
+<!DOCTYPE RCC><RCC version="1.0">
+  <qresource>
+    <file>./frequencies/frq_gen_023.mp3</file>
+    <file>./frequencies/frq_gen_033.mp3</file>
+  </qresource>
+</RCC>
+

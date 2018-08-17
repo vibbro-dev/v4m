@@ -60,46 +60,49 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     QResource::registerResource("./music.rcc");
+    QResource::registerResource("./frequencies.rcc");
 
     QCoreApplication::setApplicationName("v4m");
     QCoreApplication::setOrganizationName("Vibbro");
     QCoreApplication::setApplicationVersion(QT_VERSION_STR);
+#if 0
     QCommandLineParser parser;
     QCommandLineOption customAudioRoleOption("custom-audio-role",
                                              "Set a custom audio role for the player.",
                                              "role");
-    parser.setApplicationDescription("Qt MultiMedia Player Example");
+    parser.setApplicationDescription("Vibbro vibed control software");
     parser.addHelpOption();
     parser.addVersionOption();
     parser.addOption(customAudioRoleOption);
     parser.addPositionalArgument("url", "The URL(s) to open.");
     parser.process(app);
+#endif
 
     DoublePlayer dp;
 
-/*
+#if 0
     if (parser.isSet(customAudioRoleOption))
     {
         player1.setCustomAudioRole(parser.value(customAudioRoleOption));
         player2.setCustomAudioRole(parser.value(customAudioRoleOption));
     }
-*/
 
     if (!parser.positionalArguments().isEmpty())
     {
-        if (dp.player(0).isPlayerAvailable()) {
+        if (dp.player().isPlayerAvailable()) {
           QList<QUrl> urls;
           for (auto &a: parser.positionalArguments())
               urls.append(QUrl::fromUserInput(a, QDir::currentPath(), QUrl::AssumeLocalFile));
-          dp.player(0).addToPlaylist(urls);
+          dp.player().addToPlaylist(urls);
         }
-        if (dp.player(1).isPlayerAvailable()) {
+        if (dp.frequencyPlayer().isPlayerAvailable()) {
           QList<QUrl> urls;
           for (auto &a: parser.positionalArguments())
               urls.append(QUrl::fromUserInput(a, QDir::currentPath(), QUrl::AssumeLocalFile));
-          dp.player(1).addToPlaylist(urls);
+          dp.frequencyPlayer().addToPlaylist(urls);
         }
     }
+#endif
 
     dp.show();
     return app.exec();

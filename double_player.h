@@ -16,6 +16,7 @@
 #include <QVBoxLayout>
 
 #include "player.h"
+#include "frequency_player.h"
 
 class DoublePlayer : public QGroupBox
 {
@@ -25,13 +26,15 @@ public:
     explicit DoublePlayer(QWidget *parent = nullptr);
     ~DoublePlayer();
 
-    Player &player(qint64 idx);
+    Player &player();
+    FrequencyPlayer &frequencyPlayer();
 
 signals:
     void fullScreenChanged(bool fullScreen);
 
 private:
-    Player *m_player[2] { nullptr, nullptr };
+    Player *m_player = nullptr;
+    FrequencyPlayer *m_fplayer = nullptr;
     QVBoxLayout layout;
 };
 
