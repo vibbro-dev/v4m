@@ -8,14 +8,17 @@
 #if !defined(_V4M_FREQUENCY_PLAYER_CONTROLS_H_)
 #define _V4M_FREQUENCY_PLAYER_CONTROLS_H_
 
-#include <QMediaPlayer>
 #include <QWidget>
+#include <QMediaPlayer>
+#include <QButtonGroup>
 
 QT_BEGIN_NAMESPACE
-class QAbstractButton;
+class QWidget;
 class QAbstractSlider;
-class QComboBox;
+class QAbstractButton;
 QT_END_NAMESPACE
+
+#define NUM_OF_FREQUENCIES   (2)
 
 class FrequencyPlayerControls : public QWidget
 {
@@ -24,53 +27,34 @@ class FrequencyPlayerControls : public QWidget
 public:
     explicit FrequencyPlayerControls(QWidget *parent = nullptr);
 
-    QMediaPlayer::State state() const;
+    int numberOfFrequencies() const { return (int) NUM_OF_FREQUENCIES; }
+    int frequencyId() const         { return m_frequencySelector->checkedId(); }
     int volume() const;
-    bool isMuted() const;
-#if 0
-    qreal playbackRate() const;
-#endif
+    QMediaPlayer::State state() const;
 
 public slots:
-    void setState(QMediaPlayer::State state);
     void setVolume(int volume);
-    void setMuted(bool muted);
-#if 0
-    void setPlaybackRate(float rate);
-#endif
+    void setState(QMediaPlayer::State state);
 
 signals:
-    void play();
-    void pause();
+    void play(int fid);
     void stop();
-    void next();
-    void previous();
     void changeVolume(int volume);
-    void changeMuting(bool muting);
-#if 0
-    void changeRate(qreal rate);
-#endif
 
-private slots:
-    void playClicked();
-    void muteClicked();
-#if 0
-    void updateRate();
-#endif
-    void onVolumeSliderValueChanged();
 
 private:
-    QMediaPlayer::State m_playerState = QMediaPlayer::StoppedState;
-    bool m_playerMuted = false;
-    QAbstractButton *m_playButton = nullptr;
+
+    QButtonGroup *m_frequencySelector = nullptr;
     QAbstractButton *m_stopButton = nullptr;
-    QAbstractButton *m_nextButton = nullptr;
-    QAbstractButton *m_previousButton = nullptr;
-    QAbstractButton *m_muteButton = nullptr;
     QAbstractSlider *m_volumeSlider = nullptr;
-#if 0
-    QComboBox *m_rateBox = nullptr;
-#endif
+
+    QMediaPlayer::State m_playerState = QMediaPlayer::StoppedState;
+
+private slots:
+
+    void frequencySelectorClicked(int);
+    void stopClicked();
+    void onVolumeSliderValueChanged();
 };
 
 #endif // _V4M_FREQUENCY_PLAYER_CONTROLS_H_

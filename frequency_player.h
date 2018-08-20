@@ -57,10 +57,8 @@ private slots:
     void metaDataChanged();
 #endif
 
-    void previousClicked();
-
-    void seek(int seconds);
-    void jump(const QModelIndex &index);
+    void jump(const int index);
+    void play(const int fid);
 #if 0
     void playlistPositionChanged(int);
 #endif
@@ -73,15 +71,7 @@ private slots:
 
 private:
 
-#if 0
-    void clearHistogram();
-    void setTrackInfo(const QString &info);
-#endif
     void setStatusInfo(const QString &info);
-#if 0
-    void handleCursor(QMediaPlayer::MediaStatus status);
-    void updateDurationInfo(qint64 currentInfo);
-#endif
 
     QMediaPlayer *m_player = nullptr;
     QMediaPlaylist *m_playlist = nullptr;

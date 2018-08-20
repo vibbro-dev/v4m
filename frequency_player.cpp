@@ -1,50 +1,8 @@
 /****************************************************************************
 **
-** Copyright (C) 2017 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
+** Copyright (C) 2018 Vibbro Snc
 **
-** This file is part of the examples of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:BSD$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** BSD License Usage
-** Alternatively, you may use this file under the terms of the BSD license
-** as follows:
-**
-** "Redistribution and use in source and binary forms, with or without
-** modification, are permitted provided that the following conditions are
-** met:
-**   * Redistributions of source code must retain the above copyright
-**     notice, this list of conditions and the following disclaimer.
-**   * Redistributions in binary form must reproduce the above copyright
-**     notice, this list of conditions and the following disclaimer in
-**     the documentation and/or other materials provided with the
-**     distribution.
-**   * Neither the name of The Qt Company Ltd nor the names of its
-**     contributors may be used to endorse or promote products derived
-**     from this software without specific prior written permission.
-**
-**
-** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-** "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-** LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-** A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-** OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-** SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-** LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
-**
-** $QT_END_LICENSE$
+** Licensed under the terms of the GNU GPL version 3 License
 **
 ****************************************************************************/
 
@@ -74,6 +32,7 @@ FrequencyPlayer::FrequencyPlayer(QWidget *parent)
     m_player->setAudioRole(QAudio::MusicRole);
     m_playlist = new QMediaPlaylist();
     m_player->setPlaylist(m_playlist);
+    m_playlist->setPlaybackMode(QMediaPlaylist::Loop);
 
 #if 0
     qInfo() << "Supported audio roles:";
@@ -135,93 +94,31 @@ FrequencyPlayer::FrequencyPlayer(QWidget *parent)
 #endif
 
     FrequencyPlayerControls *controls = new FrequencyPlayerControls(this);
-    controls->setState(m_player->state());
-    controls->setVolume(m_player->volume());
-    controls->setMuted(controls->isMuted());
 
-    connect(controls, &FrequencyPlayerControls::play, m_player, &QMediaPlayer::play);
-    connect(controls, &FrequencyPlayerControls::stop, m_player, &QMediaPlayer::stop);
+    connect(controls, &FrequencyPlayerControls::play, this, &FrequencyPlayer::play);
 #if 0
-    connect(controls, &FrequencyPlayerControls::pause, m_player, &QMediaPlayer::pause);
-    connect(controls, &FrequencyPlayerControls::next, m_playlist, &QMediaPlaylist::next);
-    connect(controls, &FrequencyPlayerControls::previous, this, &FrequencyPlayer::previousClicked);
-#endif
-    connect(controls, &FrequencyPlayerControls::changeVolume, m_player, &QMediaPlayer::setVolume);
-    connect(controls, &FrequencyPlayerControls::changeMuting, m_player, &QMediaPlayer::setMuted);
-#if 0
-    connect(controls, &FrequencyPlayerControls::changeRate, m_player, &QMediaPlayer::setPlaybackRate);
+    for (quint k = 0; k < controls->numberOfFrequencyControls(); ++k)
+    {
+      controls[k]->setState(m_player->state());
+      controls[k]->setVolume(m_player->volume());
+      controls[k]->setMuted(controls->isMuted());
+
+      connect(controls[k], &FrequencyControl::play, this, &FrequencyPlayer::play);
+      connect(controls[k], &FrequencyControl::stop, this, &FrequencyPlayer::stop);
+
+      connect(controls[k], &FrequencyControl::changeVolume, this, &FrequencyPlayer::setVolume);
+      connect(controls[k], &FrequencyControl::changeMuting, this, &FrequencyPlayer::setMuted);
+    }
 #endif
 
     connect(m_player, &QMediaPlayer::stateChanged, controls, &FrequencyPlayerControls::setState);
     connect(m_player, &QMediaPlayer::volumeChanged, controls, &FrequencyPlayerControls::setVolume);
-    connect(m_player, &QMediaPlayer::mutedChanged, controls, &FrequencyPlayerControls::setMuted);
 
-#if 0
-    m_fullScreenButton = new QPushButton(tr("FullScreen"), this);
-    m_fullScreenButton->setCheckable(true);
-
-    m_colorButton = new QPushButton(tr("Color Options..."), this);
-    m_colorButton->setEnabled(false);
-    connect(m_colorButton, &QPushButton::clicked, this, &FrequencyPlayer::showColorDialog);
-#endif
-
-#if 0
-    QBoxLayout *displayLayout = new QHBoxLayout;
-    displayLayout->addWidget(m_playlistView);
-#endif
-
-    QBoxLayout *controlLayout = new QHBoxLayout;
+    QBoxLayout *controlLayout = new QVBoxLayout(this);
     controlLayout->setMargin(0);
-#if 0
-    controlLayout->addWidget(openButton);
-    controlLayout->addStretch(1);
-#endif
     controlLayout->addWidget(controls);
-    controlLayout->addStretch(1);
-#if 0
-    controlLayout->addWidget(m_fullScreenButton);
-    controlLayout->addWidget(m_colorButton);
-#endif
-
-#if 0
-    QBoxLayout *layout = new QVBoxLayout;
-    layout->addLayout(displayLayout);
-    QHBoxLayout *hLayout = new QHBoxLayout;
-    hLayout->addWidget(m_slider);
-    hLayout->addWidget(m_labelDuration);
-    layout->addLayout(hLayout);
-    layout->addLayout(controlLayout);
-    layout->addLayout(histogramLayout);
-#endif
-#if defined(Q_OS_QNX)
-    // On QNX, the main window doesn't have a title bar (or any other decorations).
-    // Create a status bar for the status information instead.
-    m_statusLabel = new QLabel;
-    m_statusBar = new QStatusBar;
-    m_statusBar->addPermanentWidget(m_statusLabel);
-    m_statusBar->setSizeGripEnabled(false); // Without mouse grabbing, it doesn't work very well.
-    layout->addWidget(m_statusBar);
-#endif
 
     setLayout(controlLayout);
-
-    if (!isPlayerAvailable()) {
-        QMessageBox::warning(this, tr("Service not available"),
-                             tr("The QMediaPlayer object does not have a valid service.\n"\
-                                "Please check the media service plugins are installed."));
-
-        controls->setEnabled(false);
-#if 0
-        m_playlistView->setEnabled(false);
-        openButton->setEnabled(false);
-        m_colorButton->setEnabled(false);
-        m_fullScreenButton->setEnabled(false);
-#endif
-    }
-
-#if 0
-    metaDataChanged();
-#endif
 }
 
 FrequencyPlayer::~FrequencyPlayer()
@@ -313,22 +210,17 @@ void FrequencyPlayer::metaDataChanged()
 }
 #endif
 
-void FrequencyPlayer::previousClicked()
+void
+FrequencyPlayer::jump(const int idx)
 {
-    // Go to previous track if we are within the first 5 seconds of playback
-    // Otherwise, seek to the beginning.
-    if (m_player->position() <= 5000)
-        m_playlist->previous();
-    else
-        m_player->setPosition(0);
+    m_playlist->setCurrentIndex(idx);
+    m_player->play();
 }
 
-void FrequencyPlayer::jump(const QModelIndex &index)
+void
+FrequencyPlayer::play(const int fid)
 {
-    if (index.isValid()) {
-        m_playlist->setCurrentIndex(index.row());
-        m_player->play();
-    }
+    jump(fid);
 }
 
 #if 0
@@ -339,10 +231,12 @@ void FrequencyPlayer::playlistPositionChanged(int currentItem)
 }
 #endif
 
+#if 0
 void FrequencyPlayer::seek(int seconds)
 {
     m_player->setPosition(seconds * 1000);
 }
+#endif
 
 void FrequencyPlayer::statusChanged(QMediaPlayer::MediaStatus status)
 {
@@ -400,44 +294,20 @@ void FrequencyPlayer::handleCursor(QMediaPlayer::MediaStatus status)
 
 void FrequencyPlayer::bufferingProgress(int progress)
 {
+    QString msg;
+
     if (m_player->mediaStatus() == QMediaPlayer::StalledMedia)
-        setStatusInfo(tr("Stalled %1%").arg(progress));
+        msg.append(tr("Stalled %1%")).arg(progress);
     else
-        setStatusInfo(tr("Buffering %1%").arg(progress));
-}
+        msg.append(tr("Buffering %1%")).arg(progress);
 
-#if 0
-void FrequencyPlayer::setTrackInfo(const QString &info)
-{
-    m_trackInfo = info;
-
-    if (m_statusBar) {
-        m_statusBar->showMessage(m_trackInfo);
-        m_statusLabel->setText(m_statusInfo);
-    } else {
-        if (!m_statusInfo.isEmpty())
-            setWindowTitle(QString("%1 | %2").arg(m_trackInfo).arg(m_statusInfo));
-        else
-            setWindowTitle(m_trackInfo);
-    }
+    setStatusInfo(msg);
+    qDebug() << msg;
 }
-#endif
 
 void FrequencyPlayer::setStatusInfo(const QString &info)
 {
-#if 0
-    m_statusInfo = info;
-
-    if (m_statusBar) {
-        m_statusBar->showMessage(m_trackInfo);
-        m_statusLabel->setText(m_statusInfo);
-    } else {
-        if (!m_statusInfo.isEmpty())
-            setWindowTitle(QString("%1 | %2").arg(m_trackInfo).arg(m_statusInfo));
-        else
-            setWindowTitle(m_trackInfo);
-    }
-#endif
+    qDebug() << info;
     setWindowTitle(info);
 }
 
@@ -446,29 +316,3 @@ void FrequencyPlayer::displayErrorMessage()
     qDebug() << (m_player->errorString());
     setStatusInfo(m_player->errorString());
 }
-
-#if 0
-void FrequencyPlayer::updateDurationInfo(qint64 currentInfo)
-{
-    QString tStr;
-    if (currentInfo || m_duration) {
-        QTime currentTime((currentInfo / 3600) % 60, (currentInfo / 60) % 60,
-            currentInfo % 60, (currentInfo * 1000) % 1000);
-        QTime totalTime((m_duration / 3600) % 60, (m_duration / 60) % 60,
-            m_duration % 60, (m_duration * 1000) % 1000);
-        QString format = "mm:ss";
-        if (m_duration > 3600)
-            format = "hh:mm:ss";
-        tStr = currentTime.toString(format) + " / " + totalTime.toString(format);
-    }
-    m_labelDuration->setText(tStr);
-}
-#endif
-
-#if 0
-void FrequencyPlayer::clearHistogram()
-{
-    QMetaObject::invokeMethod(m_videoHistogram, "processFrame", Qt::QueuedConnection, Q_ARG(QVideoFrame, QVideoFrame()));
-    QMetaObject::invokeMethod(m_audioHistogram, "processBuffer", Qt::QueuedConnection, Q_ARG(QAudioBuffer, QAudioBuffer()));
-}
-#endif
